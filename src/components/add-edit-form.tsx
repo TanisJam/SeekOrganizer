@@ -1,9 +1,9 @@
 'use client';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { TaskSchema, TaskFormValuesTypes } from '@/types/add-edit-form';
 import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 import {
   Dialog,
   DialogClose,
@@ -24,6 +24,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
+import { SheetDescription } from './ui/sheet';
 import {
   Select,
   SelectContent,
@@ -34,34 +35,41 @@ import {
 
 interface AddEditFormProps {
   className?: string;
+  open?: boolean;
+  handleOpen: (open: boolean) => void;
+  onSubmit: (values: TaskFormValuesTypes) => void;
 }
 
-const TaskSchema = z.object({
-  title: z.string().max(50).min(1),
-  description: z.string(),
-  important: z.boolean().optional(),
-  status: z.enum(['pending', 'in-progress', 'completed']),
-});
-
-export function AddEditForm({ className }: AddEditFormProps) {
-  const form = useForm<z.infer<typeof TaskSchema>>({
+export function AddEditForm({
+  className,
+  onSubmit,
+  open,
+  handleOpen,
+}: AddEditFormProps) {
+  const form = useForm<TaskFormValuesTypes>({
     resolver: zodResolver(TaskSchema),
     defaultValues: {
       title: '',
       important: false,
     },
   });
-
-  const onSubmit = (values: z.infer<typeof TaskSchema>) => {
-    console.log(values);
-  };
-
   return (
-    <Dialog>
+    <Dialog open={open}>
       <DialogTrigger asChild>
-        <Button className={className}>+ Add Task</Button>
+        <Button
+          className={className}
+          onClick={() => {
+            form.reset();
+            handleOpen(true);
+          }}
+        >
+          <Plus /> Add Task
+        </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent
+        className="sm:max-w-[425px]"
+        onInteractOutside={() => handleOpen(false)}
+      >
         <DialogHeader>
           <DialogTitle>Create New Task</DialogTitle>
         </DialogHeader>
@@ -148,11 +156,19 @@ export function AddEditForm({ className }: AddEditFormProps) {
             <DialogFooter className="mt-4">
               <Button type="submit">Create Task</Button>
               <DialogClose asChild>
-                <Button variant="secondary">Cancel</Button>
+                <Button
+                  onClick={() => {
+                    handleOpen(false);
+                  }}
+                  variant="secondary"
+                >
+                  Cancel
+                </Button>
               </DialogClose>
             </DialogFooter>
           </form>
         </Form>
+        <SheetDescription />
       </DialogContent>
     </Dialog>
   );

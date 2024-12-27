@@ -45,7 +45,7 @@ export async function POST(req: Request) {
   const authError = verifyToken(req);
   if (authError) return authError;
 
-  const task = req.body;
+  const task = await req.json();
   const newTask = { ...task, id: generateId() };
   return NextResponse.json(newTask);
 }

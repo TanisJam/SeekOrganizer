@@ -5,7 +5,7 @@ import { Task } from '@/core/entities/task';
 
 interface TaskStore {
   tasks: Task[];
-  addTask: (task: Task) => void;
+  addTask: (task: Omit<Task, 'id'>) => void;
   removeTask: (id: number) => void;
   updateTask: (id: number, task: Task) => void;
   getTasks: () => void;
