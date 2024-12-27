@@ -10,7 +10,7 @@ interface LoginCredentials {
 }
 
 export class AuthService {
-  private static readonly TOKEN_KEY = 'auth_token';
+  static readonly TOKEN_KEY = 'auth_token';
 
   static async login(credentials: LoginCredentials): Promise<void> {
     const response = await axios.post<AuthResponse>('/api/auth', credentials, {
@@ -20,7 +20,7 @@ export class AuthService {
     });
 
     if (!response) {
-      throw new Error('Credenciales inválidas');
+      throw new Error('Invalid credentials');
     }
 
     const data: AuthResponse = response.data;

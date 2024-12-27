@@ -10,8 +10,14 @@ export const useAuth = () => {
       setIsLoading(true);
       setError(null);
       await AuthService.login({ email, password });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error de autenticación');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        console.error('Invalid credentials');
+        setError('Invalid credentials');
+      } else {
+        setError('Authentication error');
+      }
       throw err;
     } finally {
       setIsLoading(false);
@@ -28,6 +34,6 @@ export const useAuth = () => {
     isLoading,
     error,
     login,
-    logout
+    logout,
   };
 };
