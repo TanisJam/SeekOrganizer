@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { AuthService } from './auth.service';
+import { redirect } from 'next/navigation';
 
 const api = axios.create({
   baseURL: '/api',
@@ -21,7 +22,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem(AuthService.TOKEN_KEY);
-      window.location.href = '/login';
+      redirect('/login');
     }
     return Promise.reject(error);
   }

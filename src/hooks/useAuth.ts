@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { AuthService } from '@/core/services/auth.service';
-
+import { redirect } from 'next/navigation';
 export const useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +26,7 @@ export const useAuth = () => {
 
   const logout = useCallback(() => {
     AuthService.removeToken();
-    window.location.href = '/login';
+    redirect('/login');
   }, []);
 
   return {
