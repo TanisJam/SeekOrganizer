@@ -1,36 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Seek Organizer
+### *A Task Management Application*
 
-## Getting Started
+## Description
+A Next.js application for task management with mock data and in-memory storage.
 
-First, run the development server:
+## Prerequisites
 
+- Node.js (v18 or higher)
+- pnpm (preferred package manager)
+
+## Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+pnpm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Authentication
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The application uses hardcoded credentials for demo purposes:
+- Email: `email@email.com`
+- Password: `password`
 
-## Learn More
+## Configuration
 
-To learn more about Next.js, take a look at the following resources:
+No additional configuration required. The project uses:
+- Next.js 15.1
+- TypeScript
+- TailwindCSS
+- Zod for validation
+- Jest for testing
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Development
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Start the development server:
+```bash
+pnpm dev
+```
 
-## Deploy on Vercel
+Access the application at: 
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+http://localhost:3000
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+## Testing
+
+Run tests:
+```bash
+pnpm test
+```
+
+Coverage report:
+```bash
+pnpm test:coverage
+```
+
+## Data Persistence
+
+**Important Note**: This application currently uses:
+- Mock data for initial tasks
+- In-memory storage (changes are lost on page refresh)
+- No database integration
+- All CRUD operations are temporary
+
+## Features
+
+- User authentication (mock) with email and password
+- User session management through JWT
+- Task management (CRUD operations)
+- Task filtering:
+  - All Tasks
+  - Pending
+  - In Progress
+  - Completed
+- Search functionality
+- Important task flagging
+- Responsive design
+
+## Project Structure
+
+```
+src/
+  ├── app/              # Next.js app router pages
+  ├── components/       # React components
+  ├── core/            # Core business logic & mocks
+  ├── hooks/           # Custom React hooks
+  ├── lib/             # Utility functions
+  ├── store/           # State management (in-memory)
+  └── types/           # TypeScript type definitions
+```
+## Code Quality Tools
+The project uses several tools to maintain code quality:
+
+### Husky
+Pre-commit hooks are configured using Husky to ensure code quality before each commit:
+
+* Eslint for linting
+* Type checking with TypeScript
+* Unit tests with Jest
+
+## Production Build
+
+Create production build:
+```bash
+pnpm build
+```
+
+---
