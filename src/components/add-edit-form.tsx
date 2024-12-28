@@ -1,9 +1,7 @@
 'use client';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { TaskSchema, TaskFormValuesTypes } from '@/types/add-edit-form';
+
+import { UseFormReturn } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
 import {
   Dialog,
   DialogClose,
@@ -11,7 +9,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import {
   Form,
@@ -32,53 +29,48 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Task } from '@/core/entities/task';
 
 interface AddEditFormProps {
   className?: string;
   open?: boolean;
-  handleOpen: (open: boolean) => void;
-  onSubmit: (values: TaskFormValuesTypes) => void;
+  handleCancel: () => void;
+  onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
+  selectedTask?: Task | null;
+  form: UseFormReturn<
+    {
+      title: string;
+      description: string;
+      status: 'pending' | 'in-progress' | 'completed';
+      important?: boolean | undefined;
+    },
+    unknown,
+    undefined
+  >;
 }
 
 export function AddEditForm({
-  className,
   onSubmit,
   open,
-  handleOpen,
+  handleCancel,
+  selectedTask,
+  form,
 }: AddEditFormProps) {
-  const form = useForm<TaskFormValuesTypes>({
-    resolver: zodResolver(TaskSchema),
-    defaultValues: {
-      title: '',
-      important: false,
-    },
-  });
   return (
     <Dialog open={open}>
-      <DialogTrigger asChild>
-        <Button
-          className={className}
-          onClick={() => {
-            form.reset();
-            handleOpen(true);
-          }}
-        >
-          <Plus /> Add Task
-        </Button>
-      </DialogTrigger>
       <DialogContent
         className="sm:max-w-[425px]"
-        onInteractOutside={() => handleOpen(false)}
+        onInteractOutside={handleCancel}
       >
         <DialogHeader>
-          <DialogTitle>Create New Task</DialogTitle>
+          <DialogTitle>
+            {selectedTask ? 'Edit ' : 'Add New '}
+            Task
+          </DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col gap-4"
-          >
+          <form onSubmit={onSubmit} className="flex flex-col gap-4">
             <FormField
               control={form.control}
               name="title"
@@ -154,14 +146,12 @@ export function AddEditForm({
             />
 
             <DialogFooter className="mt-4">
-              <Button type="submit">Create Task</Button>
+              <Button type="submit">
+                {selectedTask ? 'Update ' : 'Add '}
+                Task
+              </Button>
               <DialogClose asChild>
-                <Button
-                  onClick={() => {
-                    handleOpen(false);
-                  }}
-                  variant="secondary"
-                >
+                <Button onClick={handleCancel} variant="secondary">
                   Cancel
                 </Button>
               </DialogClose>

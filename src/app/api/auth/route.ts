@@ -1,3 +1,4 @@
+import { fakeDelay } from '@/lib/mockUtils';
 import { NextResponse } from 'next/server';
 
 const tokenMock =
@@ -5,6 +6,8 @@ const tokenMock =
 
 export async function POST(req: Request) {
   const { email, password } = await req.json();
+
+  await fakeDelay();
 
   if (email === 'email@email.com' && password === 'password') {
     return new NextResponse(JSON.stringify({ token: tokenMock }), {

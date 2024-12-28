@@ -1,15 +1,16 @@
 'use client';
 import { TaskCard } from '@/components/task-card';
+
 import { useTaskStore } from '@/store/useTaskStore';
 import { useEffect } from 'react';
 
 export function Tasks() {
-  const loadTasks = useTaskStore((state) => state.getTasks);
-  const tasks = useTaskStore((state) => state.tasks);
+  const { tasks, getTasks, setSelectTask, toggleFormOpen, toggleDeleteDialog } =
+    useTaskStore();
 
   useEffect(() => {
-    loadTasks();
-  }, [loadTasks]);
+    getTasks();
+  }, [getTasks]);
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
@@ -21,6 +22,14 @@ export function Tasks() {
             description={task.description}
             status={task.status}
             important={task.important}
+            onEdit={() => {
+              setSelectTask(task);
+              toggleFormOpen();
+            }}
+            onDelete={() => {
+              setSelectTask(task);
+              toggleDeleteDialog();
+            }}
           />
         ))}
       </div>

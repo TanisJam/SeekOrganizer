@@ -47,7 +47,7 @@ export function LoginForm({
       await login(values.email, values.password);
       window.location.href = '/dashboard';
     } catch (err) {
-      console.error(err);
+      console.log(err);
     }
   };
 

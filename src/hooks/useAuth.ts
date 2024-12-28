@@ -13,7 +13,7 @@ export const useAuth = () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err.response?.status === 401) {
-        console.error('Invalid credentials');
+        console.log('Invalid credentials');
         setError('Invalid credentials');
       } else {
         setError('Authentication error');

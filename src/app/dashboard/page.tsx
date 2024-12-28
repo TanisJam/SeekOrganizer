@@ -10,25 +10,73 @@ import {
 } from '@/components/ui/sidebar';
 import { Tasks } from './tasks';
 import { AddEditForm } from '@/components/add-edit-form';
-import { TaskFormValuesTypes } from '@/types/add-edit-form';
+import { TaskFormValuesTypes, TaskSchema } from '@/types/add-edit-form';
 import { useTaskStore } from '@/store/useTaskStore';
-import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
+import { DeleteTaskDialog } from '@/components/delete-taks-dialog';
 
 export default function Page() {
-  const { addTask } = useTaskStore();
-  const [modalOpen, setModalOpen] = useState(false);
+  const {
+    addTask,
+    formOpen,
+    toggleFormOpen,
+    selectedTask,
+    setSelectTask,
+    updateTask,
+    deleteDialogOpen,
+    toggleDeleteDialog,
+    removeTask,
+  } = useTaskStore();
 
-  const onSubmit = (values: TaskFormValuesTypes) => {
+  const form = useForm<TaskFormValuesTypes>({
+    resolver: zodResolver(TaskSchema),
+    defaultValues: {
+      title: '',
+      important: false,
+    },
+  });
 
+  useEffect(() => {
+    form.reset({
+      title: '',
+      important: false,
+    });
+    if (selectedTask?.id) {
+      const editTask = {
+        title: selectedTask.title,
+        description: selectedTask.description,
+        status: selectedTask.status,
+        important: selectedTask.important,
+      };
+      form.reset(editTask);
+    }
+  }, [selectedTask, form]);
+
+  const handleCancel = () => {
+    setSelectTask(null);
+    form.reset();
+    toggleFormOpen();
+  };
+
+  const onSubmit = form.handleSubmit((values: TaskFormValuesTypes) => {
     const newTask = {
       title: values.title,
       description: values.description,
       important: values.important ?? false,
       status: values.status,
     };
-    addTask(newTask);
-    setModalOpen(false);
-  };
+    if (selectedTask?.id) {
+      updateTask(selectedTask.id, { ...newTask, id: selectedTask.id });
+    } else {
+      addTask(newTask);
+    }
+    form.reset();
+    toggleFormOpen();
+  });
 
   return (
     <SidebarProvider>
@@ -38,11 +86,32 @@ export default function Page() {
           <SidebarTrigger className="-ml-1" />
           <Separator orientation="vertical" className="mr-2 h-4" />
           <SearchForm />
-          <AddEditForm
+          <Button
             className="ml-auto"
+            onClick={() => {
+              setSelectTask(null);
+              form.reset();
+              toggleFormOpen();
+            }}
+          >
+            <Plus /> Add Task
+          </Button>
+          <AddEditForm
             onSubmit={onSubmit}
-            open={modalOpen}
-            handleOpen={setModalOpen}
+            open={formOpen}
+            handleCancel={handleCancel}
+            form={form}
+            selectedTask={selectedTask}
+          />
+          <DeleteTaskDialog
+            open={deleteDialogOpen}
+            handleCancel={toggleDeleteDialog}
+            onDelete={() => {
+              if (selectedTask?.id) {
+                removeTask(selectedTask.id);
+              }
+              toggleDeleteDialog();
+            }}
           />
         </header>
         <Tasks />
