@@ -1,8 +1,6 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { UseFormReturn } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -11,7 +9,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import {
   Form,
@@ -24,6 +21,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
+import { SheetDescription } from '@/components/ui/sheet';
 import {
   Select,
   SelectContent,
@@ -31,46 +29,51 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Task } from '@/core/entities/task';
+import { Spinner } from '@/components/spinner';
 
 interface AddEditFormProps {
   className?: string;
+  open?: boolean;
+  handleCancel: () => void;
+  onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
+  selectedTask?: Task | null;
+  loading: boolean;
+  form: UseFormReturn<
+    {
+      title: string;
+      description: string;
+      status: 'pending' | 'in-progress' | 'completed';
+      important?: boolean | undefined;
+    },
+    unknown,
+    undefined
+  >;
 }
 
-const TaskSchema = z.object({
-  title: z.string().max(50).min(1),
-  description: z.string(),
-  important: z.boolean().optional(),
-  status: z.enum(['pending', 'in-progress', 'completed']),
-});
-
-export function AddEditForm({ className }: AddEditFormProps) {
-  const form = useForm<z.infer<typeof TaskSchema>>({
-    resolver: zodResolver(TaskSchema),
-    defaultValues: {
-      title: '',
-      important: false,
-    },
-  });
-
-  const onSubmit = (values: z.infer<typeof TaskSchema>) => {
-    console.log(values);
-  };
-
+export function AddEditForm({
+  onSubmit,
+  open,
+  handleCancel,
+  selectedTask,
+  form,
+  loading,
+}: AddEditFormProps) {
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button className={className}>+ Add Task</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+    <Dialog open={open}>
+      <DialogContent
+        className="sm:max-w-[425px]"
+        onInteractOutside={handleCancel}
+      >
         <DialogHeader>
-          <DialogTitle>Create New Task</DialogTitle>
+          <DialogTitle>
+            {selectedTask ? 'Edit ' : 'Add New '}
+            Task
+          </DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col gap-4"
-          >
+          <form onSubmit={onSubmit} className="flex flex-col gap-4" role="form">
             <FormField
               control={form.control}
               name="title"
@@ -146,13 +149,25 @@ export function AddEditForm({ className }: AddEditFormProps) {
             />
 
             <DialogFooter className="mt-4">
-              <Button type="submit">Create Task</Button>
+              <Button type="submit" disabled={loading}>
+                <Spinner isLoading={loading} />
+                {selectedTask ? 'Update ' : 'Add '}
+                Task
+              </Button>
               <DialogClose asChild>
-                <Button variant="secondary">Cancel</Button>
+                <Button
+                  onClick={handleCancel}
+                  variant="secondary"
+                  disabled={loading}
+                >
+                  Cancel
+                </Button>
               </DialogClose>
             </DialogFooter>
           </form>
         </Form>
+
+        <SheetDescription />
       </DialogContent>
     </Dialog>
   );

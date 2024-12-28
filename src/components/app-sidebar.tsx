@@ -1,12 +1,6 @@
 import * as React from 'react';
-import {
-  Home,
-  Clock,
-  Check,
-  CircleAlert,
-  LayoutGrid,
-  List,
-} from 'lucide-react';
+import { useTaskStore } from '@/store/useTaskStore';
+import { Home, Clock, Play, Check, CircleAlert } from 'lucide-react';
 
 import {
   Sidebar,
@@ -17,63 +11,85 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  
 } from '@/components/ui/sidebar';
 import { Button } from './ui/button';
+import LogoutButton from './logout';
 
 const filters = [
   {
     title: 'All Tasks',
+    filter: 'all' as const,
     icon: <Home />,
-    isActive: true,
   },
   {
     title: 'Pending',
+    filter: 'pending' as const,
     icon: <Clock />,
   },
   {
-    title: 'Completed',
-    icon: <Check />,
+    title: 'In Progress',
+    filter: 'in-progress' as const,
+    icon: <Play />,
   },
   {
-    title: 'Important',
-    icon: <CircleAlert />,
+    title: 'Completed',
+    filter: 'completed' as const,
+    icon: <Check />,
   },
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { setStatusFilter, setImportantFilter, statusFilter, importantFilter } =
+    useTaskStore();
   return (
     <Sidebar {...props}>
       <SidebarHeader>
         <h1 className="text-2xl font-semibold">Seek Organizer</h1>
-        <h3 className="text-sm font-normal">View</h3>
-        <div className="flex gap-2 ">
-          <Button className="w-full">
-            <LayoutGrid />
-            Grid
-          </Button>
-          <Button className="w-full">
-            <List />
-            List
-          </Button>
-        </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <h3 className="text-sm font-normal">Filters</h3>
           <SidebarMenu>
             {filters.map((filter) => (
               <SidebarMenuItem key={filter.title}>
-                <SidebarMenuButton asChild isActive={filter.isActive}>
-                  <Button variant="ghost" className="justify-start">
+                <SidebarMenuButton
+                  asChild
+                  isActive={filter.filter === statusFilter}
+                >
+                  <Button
+                    variant="ghost"
+                    className="justify-start"
+                    onClick={() => {
+                      if (filter.filter === statusFilter) {
+                        setImportantFilter(false);
+                      }
+                      setStatusFilter(filter.filter);
+                    }}
+                  >
                     {filter.icon}
                     {filter.title}
                   </Button>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild isActive={importantFilter}>
+                <Button
+                  variant="ghost"
+                  className="justify-start"
+                  onClick={() => {
+                    setImportantFilter(!importantFilter);
+                  }}
+                >
+                  <CircleAlert />
+                  Important
+                </Button>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
+      <LogoutButton />
       <SidebarRail />
     </Sidebar>
   );

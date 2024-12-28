@@ -31,7 +31,7 @@ export function TaskCard({
   important,
 }: TaskCardProps) {
   return (
-    <Card className="w-full flex flex-col bg-white shadow-md">
+    <Card className="w-full flex flex-col bg-white shadow-md max-w-md">
       <CardHeader className="flex flex-col items-start justify-between space-y-0 pb-2">
         <CardTitle className="text-xl font-bold flex items-center gap-1">
           {title}
@@ -64,6 +64,7 @@ export function TaskCard({
             size="icon"
             onClick={onEdit}
             className="h-8 w-8"
+            data-testid="edit-task"
           >
             <Pencil className="h-4 w-4" />
           </Button>
@@ -72,6 +73,7 @@ export function TaskCard({
             size="icon"
             onClick={onDelete}
             className="h-8 w-8 text-destructive hover:text-destructive"
+            data-testid="delete-task"
           >
             <Trash2 className="h-4 w-4" />
           </Button>
