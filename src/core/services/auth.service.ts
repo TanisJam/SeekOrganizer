@@ -27,6 +27,10 @@ export class AuthService {
     this.setToken(data.token);
   }
 
+  static async logout(): Promise<void> {
+    this.removeToken();
+  }
+
   static getToken(): string | null {
     if (typeof localStorage === 'undefined') {
       return null;

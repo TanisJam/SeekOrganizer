@@ -23,6 +23,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { Spinner } from './spinner';
 
 const LoginSchema = z.object({
   email: z.string().email(),
@@ -101,6 +102,7 @@ export function LoginForm({
                 />
 
                 <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Spinner isLoading={isLoading} />
                   Login
                 </Button>
               </div>

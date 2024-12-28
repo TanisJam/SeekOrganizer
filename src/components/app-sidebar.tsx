@@ -19,6 +19,7 @@ import {
   SidebarRail,
 } from '@/components/ui/sidebar';
 import { Button } from './ui/button';
+import LogoutButton from './logout';
 
 const filters = [
   {
@@ -74,6 +75,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
+      <LogoutButton />
       <SidebarRail />
     </Sidebar>
   );
