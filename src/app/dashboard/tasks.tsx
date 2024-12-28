@@ -21,13 +21,9 @@ export function Tasks() {
 
   const filteredTasks = getFilteredTasks();
 
-  useEffect(() => {
-    console.log('filteredTasks', filteredTasks);
-  }, [filteredTasks]);
-
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
-      <div className="grid auto-rows-min mx-auto gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid auto-rows-min mx-auto md:mx-0 gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {filteredTasks.map((task) => (
           <TaskCard
             key={task.id}
@@ -50,7 +46,6 @@ export function Tasks() {
             <SkeletonCard key={index} />
           ))}
       </div>
-      <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
     </div>
   );
 }

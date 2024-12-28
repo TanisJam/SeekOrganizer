@@ -20,9 +20,6 @@ const LogoutButton = () => {
       setTimeoutId(id);
     } else {
       if (timeoutId) window.clearTimeout(timeoutId);
-      // Add your actual logout logic here
-
-      console.log('Logging out...');
       await AuthService.logout();
       redirect('/login');
     }
@@ -42,7 +39,7 @@ const LogoutButton = () => {
   }, [isConfirming, timeoutId]);
 
   return (
-    <Button className='m-4' onClick={handleLogout} variant="destructive">
+    <Button className="m-4" onClick={handleLogout} variant="outline">
       {isConfirming ? `Click again to confirm (${countdown})` : 'Logout'}
     </Button>
   );

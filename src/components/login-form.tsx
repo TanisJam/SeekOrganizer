@@ -24,6 +24,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Spinner } from './spinner';
+import { toast } from 'sonner';
 
 const LoginSchema = z.object({
   email: z.string().email(),
@@ -46,8 +47,10 @@ export function LoginForm({
   const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
     try {
       await login(values.email, values.password);
+      toast.success('Login successful');
       window.location.href = '/dashboard';
     } catch (err) {
+      toast.error('Login failed');
       console.log(err);
     }
   };

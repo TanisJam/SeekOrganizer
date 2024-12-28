@@ -18,6 +18,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { DeleteTaskDialog } from '@/components/delete-taks-dialog';
+import { toast } from 'sonner';
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
@@ -68,6 +69,7 @@ export default function Page() {
     setLoading(true);
     if (selectedTask?.id) {
       await removeTask(selectedTask.id);
+      toast.success('Task deleted');
     }
     setLoading(false);
     toggleDeleteDialog();
@@ -83,8 +85,10 @@ export default function Page() {
     };
     if (selectedTask?.id) {
       await updateTask(selectedTask.id, { ...newTask, id: selectedTask.id });
+      toast.success('Task updated');
     } else {
       await addTask(newTask);
+      toast.success('Task added');
     }
     setLoading(false);
     form.reset();
