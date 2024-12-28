@@ -8,17 +8,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Spinner } from '@/components/spinner';
 
 interface DeleteTaskDialogProps {
   open: boolean;
   handleCancel: () => void;
   onDelete: () => void;
+  loading: boolean;
 }
 
 export function DeleteTaskDialog({
   open,
   handleCancel,
   onDelete,
+  loading,
 }: DeleteTaskDialogProps) {
   return (
     <AlertDialog open={open}>
@@ -35,7 +38,9 @@ export function DeleteTaskDialog({
             onClick={() => {
               onDelete();
             }}
+            disabled={loading}
           >
+            <Spinner isLoading={loading} />
             Delete
           </AlertDialogAction>
         </AlertDialogFooter>

@@ -25,6 +25,48 @@ const tasksMock: Task[] = [
     important: true,
     status: 'completed' as const,
   },
+  {
+    id: '4',
+    title: 'Create a new project',
+    description: 'Create a new project using React and TypeScript',
+    important: true,
+    status: 'pending' as const,
+  },
+  {
+    id: '5',
+    title: 'Create a new component',
+    description: 'Create a new component for the project',
+    important: false,
+    status: 'in-progress' as const,
+  },
+  {
+    id: '6',
+    title: 'Update the project',
+    description: 'Update the project with new features',
+    important: true,
+    status: 'completed' as const,
+  },
+  {
+    id: '7',
+    title: 'Create a new project',
+    description: 'Create a new project using React and TypeScript',
+    important: true,
+    status: 'pending' as const,
+  },
+  {
+    id: '8',
+    title: 'Create a new component',
+    description: 'Create a new component for the project',
+    important: false,
+    status: 'in-progress' as const,
+  },
+  {
+    id: '9',
+    title: 'Update the project',
+    description: 'Update the project with new features',
+    important: true,
+    status: 'completed' as const,
+  },
 ];
 
 const verifyToken = (req: Request) => {

@@ -30,6 +30,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Task } from '@/core/entities/task';
+import { Spinner } from './spinner';
 
 interface AddEditFormProps {
   className?: string;
@@ -37,6 +38,7 @@ interface AddEditFormProps {
   handleCancel: () => void;
   onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
   selectedTask?: Task | null;
+  loading: boolean;
   form: UseFormReturn<
     {
       title: string;
@@ -55,6 +57,7 @@ export function AddEditForm({
   handleCancel,
   selectedTask,
   form,
+  loading,
 }: AddEditFormProps) {
   return (
     <Dialog open={open}>
@@ -146,12 +149,17 @@ export function AddEditForm({
             />
 
             <DialogFooter className="mt-4">
-              <Button type="submit">
+              <Button type="submit" disabled={loading}>
+                <Spinner isLoading={loading} />
                 {selectedTask ? 'Update ' : 'Add '}
                 Task
               </Button>
               <DialogClose asChild>
-                <Button onClick={handleCancel} variant="secondary">
+                <Button
+                  onClick={handleCancel}
+                  variant="secondary"
+                  disabled={loading}
+                >
                   Cancel
                 </Button>
               </DialogClose>

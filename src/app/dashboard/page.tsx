@@ -16,10 +16,12 @@ import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { DeleteTaskDialog } from '@/components/delete-taks-dialog';
 
 export default function Page() {
+  const [loading, setLoading] = useState(false);
+
   const {
     addTask,
     formOpen,
@@ -62,7 +64,17 @@ export default function Page() {
     toggleFormOpen();
   };
 
-  const onSubmit = form.handleSubmit((values: TaskFormValuesTypes) => {
+  const handleRemove = async () => {
+    setLoading(true);
+    if (selectedTask?.id) {
+      await removeTask(selectedTask.id);
+    }
+    setLoading(false);
+    toggleDeleteDialog();
+  };
+
+  const onSubmit = form.handleSubmit(async (values: TaskFormValuesTypes) => {
+    setLoading(true);
     const newTask = {
       title: values.title,
       description: values.description,
@@ -70,10 +82,11 @@ export default function Page() {
       status: values.status,
     };
     if (selectedTask?.id) {
-      updateTask(selectedTask.id, { ...newTask, id: selectedTask.id });
+      await updateTask(selectedTask.id, { ...newTask, id: selectedTask.id });
     } else {
-      addTask(newTask);
+      await addTask(newTask);
     }
+    setLoading(false);
     form.reset();
     toggleFormOpen();
   });
@@ -102,16 +115,13 @@ export default function Page() {
             handleCancel={handleCancel}
             form={form}
             selectedTask={selectedTask}
+            loading={loading}
           />
           <DeleteTaskDialog
             open={deleteDialogOpen}
             handleCancel={toggleDeleteDialog}
-            onDelete={() => {
-              if (selectedTask?.id) {
-                removeTask(selectedTask.id);
-              }
-              toggleDeleteDialog();
-            }}
+            onDelete={handleRemove}
+            loading={loading}
           />
         </header>
         <Tasks />

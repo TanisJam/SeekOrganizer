@@ -31,7 +31,7 @@ export function TaskCard({
   important,
 }: TaskCardProps) {
   return (
-    <Card className="w-full flex flex-col bg-white shadow-md">
+    <Card className="w-full flex flex-col bg-white shadow-md max-w-md">
       <CardHeader className="flex flex-col items-start justify-between space-y-0 pb-2">
         <CardTitle className="text-xl font-bold flex items-center gap-1">
           {title}

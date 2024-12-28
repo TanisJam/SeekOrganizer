@@ -42,7 +42,7 @@ const LogoutButton = () => {
   }, [isConfirming, timeoutId]);
 
   return (
-    <Button onClick={handleLogout} variant="destructive">
+    <Button className='m-4' onClick={handleLogout} variant="destructive">
       {isConfirming ? `Click again to confirm (${countdown})` : 'Logout'}
     </Button>
   );

@@ -1,21 +1,34 @@
 'use client';
+import SkeletonCard from '@/components/skeleton-card';
 import { TaskCard } from '@/components/task-card';
 
 import { useTaskStore } from '@/store/useTaskStore';
 import { useEffect } from 'react';
 
 export function Tasks() {
-  const { tasks, getTasks, setSelectTask, toggleFormOpen, toggleDeleteDialog } =
-    useTaskStore();
+  const {
+    tasks,
+    getTasks,
+    setSelectTask,
+    toggleFormOpen,
+    toggleDeleteDialog,
+    getFilteredTasks,
+  } = useTaskStore();
 
   useEffect(() => {
     getTasks();
   }, [getTasks]);
 
+  const filteredTasks = getFilteredTasks();
+
+  useEffect(() => {
+    console.log('filteredTasks', filteredTasks);
+  }, [filteredTasks]);
+
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
-      <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-        {tasks.map((task) => (
+      <div className="grid auto-rows-min mx-auto gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        {filteredTasks.map((task) => (
           <TaskCard
             key={task.id}
             title={task.title}
@@ -32,6 +45,10 @@ export function Tasks() {
             }}
           />
         ))}
+        {tasks.length === 0 &&
+          Array.from({ length: 9 }).map((_, index) => (
+            <SkeletonCard key={index} />
+          ))}
       </div>
       <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
     </div>
