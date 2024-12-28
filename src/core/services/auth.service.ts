@@ -12,6 +12,21 @@ interface LoginCredentials {
 export class AuthService {
   static readonly TOKEN_KEY = 'auth_token';
 
+  /**
+   * Authenticates a user with the provided credentials.
+   * 
+   * @param credentials - The login credentials containing username and password
+   * @throws {Error} If the credentials are invalid or the server response is empty
+   * @returns A Promise that resolves when authentication is successful
+   * 
+   * @example
+   * ```ts
+   * await AuthService.login({
+   *   username: "user@example.com",
+   *   password: "password123"
+   * });
+   * ```
+   */
   static async login(credentials: LoginCredentials): Promise<void> {
     const response = await axios.post<AuthResponse>('/api/auth', credentials, {
       headers: {

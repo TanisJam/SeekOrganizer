@@ -6,7 +6,7 @@ interface LoaderProps {
 
 export function Spinner({ isLoading }: LoaderProps) {
   if (isLoading) {
-    return <Loader className="animate-spin" />;
+    return <Loader className="animate-spin" data-testid="spinner" />;
   }
   return null;
 }
