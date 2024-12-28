@@ -3,7 +3,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export default function SkeletonCard() {
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full max-w-md" data-testid="skeleton-card">
       <CardHeader className="pb-3">
         <div className="flex items-center gap-2 mb-2">
           <Skeleton className="h-6 w-40" />

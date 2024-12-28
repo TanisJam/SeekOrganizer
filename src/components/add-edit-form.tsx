@@ -21,7 +21,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import { SheetDescription } from './ui/sheet';
+import { SheetDescription } from '@/components/ui/sheet';
 import {
   Select,
   SelectContent,
@@ -30,7 +30,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Task } from '@/core/entities/task';
-import { Spinner } from './spinner';
+import { Spinner } from '@/components/spinner';
 
 interface AddEditFormProps {
   className?: string;
@@ -73,7 +73,7 @@ export function AddEditForm({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={onSubmit} className="flex flex-col gap-4">
+          <form onSubmit={onSubmit} className="flex flex-col gap-4" role="form">
             <FormField
               control={form.control}
               name="title"
@@ -166,6 +166,7 @@ export function AddEditForm({
             </DialogFooter>
           </form>
         </Form>
+
         <SheetDescription />
       </DialogContent>
     </Dialog>

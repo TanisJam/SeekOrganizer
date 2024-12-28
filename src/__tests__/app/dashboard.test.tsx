@@ -1,12 +1,16 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import Page from '@/app/dashboard/page';
 import { useTaskStore } from '@/store/useTaskStore';
-import { toast } from 'sonner';
+
+import { useForm } from 'react-hook-form';
 
 jest.mock('@/store/useTaskStore', () => ({
   useTaskStore: jest.fn(),
+}));
+jest.mock('react-hook-form', () => ({
+  useForm: jest.fn(),
 }));
 jest.mock('sonner');
 
@@ -20,6 +24,20 @@ describe('Page Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: jest.fn().mockImplementation((query) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+      })),
+    });
+
     (useTaskStore as unknown as jest.Mock).mockReturnValue({
       addTask: mockAddTask,
       updateTask: mockUpdateTask,
@@ -32,6 +50,19 @@ describe('Page Component', () => {
       deleteDialogOpen: false,
       toggleDeleteDialog: mockToggleDeleteDialog,
       getFilteredTasks: jest.fn().mockReturnValue([]),
+      getTasks: jest.fn().mockResolvedValue([]),
+    });
+
+    (useForm as jest.Mock).mockReturnValue({
+      reset: jest.fn(),
+      formState: { errors: {} },
+      handleSubmit: (fn: (data: unknown) => void) => fn,
+      register: jest.fn(),
+      control: {},
+      setError: jest.fn(),
+      clearErrors: jest.fn(),
+      setValue: jest.fn(),
+      watch: jest.fn(),
     });
 
     global.fetch = jest.fn().mockResolvedValue({
@@ -39,53 +70,14 @@ describe('Page Component', () => {
     });
   });
 
-  xit('renders the Add Task button', () => {
+  it('renders the Add Task button', () => {
     render(<Page />);
     expect(screen.getByText('Add Task')).toBeInTheDocument();
   });
 
-  xit('opens the add form when Add Task button is clicked', () => {
+  it('opens the add form when Add Task button is clicked', () => {
     render(<Page />);
     fireEvent.click(screen.getByText('Add Task'));
     expect(mockToggleFormOpen).toHaveBeenCalled();
-  });
-
-  xit('submits the add task form', async () => {
-    render(<Page />);
-    fireEvent.click(screen.getByText('Add Task'));
-
-    // Assuming the form fields have placeholder texts
-    fireEvent.change(screen.getByPlaceholderText('Title'), {
-      target: { value: 'Test Task' },
-    });
-    fireEvent.click(screen.getByText('Submit'));
-
-    await waitFor(() => {
-      expect(mockAddTask).toHaveBeenCalledWith({
-        title: 'Test Task',
-        description: '',
-        important: false,
-        status: undefined,
-      });
-      expect(toast.success).toHaveBeenCalledWith('Task added');
-    });
-  });
-
-  xit('handles task deletion', async () => {
-    (useTaskStore as jest.Mock).mockReturnValue({
-      ...useTaskStore(),
-      selectedTask: { id: 1, title: 'Task 1' },
-    });
-
-    render(<Page />);
-    fireEvent.click(screen.getByText('Delete'));
-
-    fireEvent.click(screen.getByText('Confirm'));
-
-    await waitFor(() => {
-      expect(mockRemoveTask).toHaveBeenCalledWith(1);
-      expect(toast.success).toHaveBeenCalledWith('Task deleted');
-      expect(mockToggleDeleteDialog).toHaveBeenCalled();
-    });
   });
 });
