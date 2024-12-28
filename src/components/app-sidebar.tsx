@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useTaskStore } from '@/store/useTaskStore';
 import { Home, Clock, Play, Check, CircleAlert } from 'lucide-react';
-
+import { useMemo } from 'react';
 import {
   Sidebar,
   SidebarContent,
@@ -11,10 +11,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-  
 } from '@/components/ui/sidebar';
-import { Button } from './ui/button';
-import LogoutButton from './logout';
+import { Button } from '@/components/ui/button';
+import LogoutButton from '@/components/logout';
+import { Badge } from '@/components/ui/badge';
 
 const filters = [
   {
@@ -40,8 +40,31 @@ const filters = [
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { setStatusFilter, setImportantFilter, statusFilter, importantFilter } =
-    useTaskStore();
+  const {
+    setStatusFilter,
+    setImportantFilter,
+    statusFilter,
+    importantFilter,
+    tasks,
+  } = useTaskStore();
+
+  const pendingTasks = useMemo(
+    () => tasks.filter((task) => task.status === 'pending'),
+    [tasks]
+  );
+  const inProgressTasks = useMemo(
+    () => tasks.filter((task) => task.status === 'in-progress'),
+    [tasks]
+  );
+  const completedTasks = useMemo(
+    () => tasks.filter((task) => task.status === 'completed'),
+    [tasks]
+  );
+  const importantTasks = useMemo(
+    () => tasks.filter((task) => task.important),
+    [tasks]
+  );
+
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -68,6 +91,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   >
                     {filter.icon}
                     {filter.title}
+                    <Badge
+                      variant="secondary"
+                      className="px-1.5 py-0.5 text-xs ml-auto"
+                    >
+                      {filter.filter === 'pending'
+                        ? pendingTasks.length
+                        : filter.filter === 'in-progress'
+                        ? inProgressTasks.length
+                        : filter.filter === 'completed'
+                        ? completedTasks.length
+                        : tasks.length}
+                    </Badge>
                   </Button>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -83,6 +118,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 >
                   <CircleAlert />
                   Important
+                  <Badge
+                    variant="secondary"
+                    className="px-1.5 py-0.5 text-xs ml-auto"
+                  >
+                    {importantTasks.length}
+                  </Badge>
                 </Button>
               </SidebarMenuButton>
             </SidebarMenuItem>

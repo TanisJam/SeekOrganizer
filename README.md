@@ -95,6 +95,15 @@ src/
   ├── store/           # State management (in-memory)
   └── types/           # TypeScript type definitions
 ```
+## Code Quality Tools
+The project uses several tools to maintain code quality:
+
+### Husky
+Pre-commit hooks are configured using Husky to ensure code quality before each commit:
+
+* Eslint for linting
+* Type checking with TypeScript
+* Unit tests with Jest
 
 ## Production Build
 
