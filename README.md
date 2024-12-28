@@ -1,8 +1,15 @@
-# Seek Organizer
-### *A Task Management Application*
+<div align="center">
 
-## Description
+# Seek Organizer
+
+<img style="width: 500px"
+ alt="desktop view" src="./public/desktop.png">
+
+### _A Task Management Application_
+
 A Next.js application for task management with mock data and in-memory storage.
+
+</div>
 
 ## Prerequisites
 
@@ -12,11 +19,13 @@ A Next.js application for task management with mock data and in-memory storage.
 ## Installation
 
 1. Clone the repository:
+
 ```bash
 git clone <repository-url>
 ```
 
 2. Install dependencies:
+
 ```bash
 pnpm install
 ```
@@ -24,12 +33,14 @@ pnpm install
 ## Authentication
 
 The application uses hardcoded credentials for demo purposes:
+
 - Email: `email@email.com`
 - Password: `password`
 
 ## Configuration
 
 No additional configuration required. The project uses:
+
 - Next.js 15.1
 - TypeScript
 - TailwindCSS
@@ -39,24 +50,25 @@ No additional configuration required. The project uses:
 ## Development
 
 Start the development server:
+
 ```bash
 pnpm dev
 ```
 
-Access the application at: 
+Access the application at:
 
 http://localhost:3000
-
-
 
 ## Testing
 
 Run tests:
+
 ```bash
 pnpm test
 ```
 
 Coverage report:
+
 ```bash
 pnpm test:coverage
 ```
@@ -64,6 +76,7 @@ pnpm test:coverage
 ## Data Persistence
 
 **Important Note**: This application currently uses:
+
 - Mock data for initial tasks
 - In-memory storage (changes are lost on page refresh)
 - No database integration
@@ -95,21 +108,23 @@ src/
   ├── store/           # State management (in-memory)
   └── types/           # TypeScript type definitions
 ```
+
 ## Code Quality Tools
+
 The project uses several tools to maintain code quality:
 
 ### Husky
+
 Pre-commit hooks are configured using Husky to ensure code quality before each commit:
 
-* Eslint for linting
-* Type checking with TypeScript
-* Unit tests with Jest
+- Eslint for linting
+- Type checking with TypeScript
+- Unit tests with Jest
 
 ## Production Build
 
 Create production build:
+
 ```bash
 pnpm build
 ```
-
----
